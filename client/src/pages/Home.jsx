@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { fetchRooms } from "../features/rooms/roomSlice";
 import Controls from "../components/Controls";
-import Rooms from "../components/Rooms";
+import Rooms from "../components/Room";
 
 const Home = () => {
   const dispatch = useDispatch();
