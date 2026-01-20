@@ -4,9 +4,9 @@
   "description": "",
   "main": "index.js",
  "scripts": {
-  "dev": "nodemon index.js",
-  "start": "node index.js"
-},
+    "start": "node index.js",
+    "seed": "node seed/seedRooms.js"
+  },
   "keywords": [],
   "author": "",
   "license": "ISC",
