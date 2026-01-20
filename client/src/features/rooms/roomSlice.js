@@ -1,5 +1,9 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { fetchRoomsAPI, bookRoomsAPI, resetRoomsAPI } from "./roomAPI";
+import {
+  fetchRoomsAPI,
+  bookRoomsAPI,
+  resetRoomsAPI,
+} from "./roomAPI";
 
 const initialState = {
   rooms: [],
@@ -7,34 +11,48 @@ const initialState = {
   error: null,
 };
 
-// async action: fetch rooms
+/**
+ * Fetch all rooms
+ * GET /api/rooms
+ */
 export const fetchRooms = createAsyncThunk(
   "rooms/fetchRooms",
-  async () => {
-    return await fetchRoomsAPI();
+  async (_, { rejectWithValue }) => {
+    try {
+      return await fetchRoomsAPI();
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
   }
 );
 
-export const randomRooms = createAsyncThunk(
-  "rooms/random",
-  async () => {
-    return await randomRoomsAPI();
-  }
-);
-
-// async action: book rooms
+/**
+ * Book rooms
+ * POST /api/book
+ */
 export const bookRooms = createAsyncThunk(
   "rooms/bookRooms",
-  async (count) => {
-    return await bookRoomsAPI(count);
+  async (count, { rejectWithValue }) => {
+    try {
+      return await bookRoomsAPI(count);
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
   }
 );
 
-// async action: reset rooms
+/**
+ * Reset all rooms
+ * POST /api/reset
+ */
 export const resetRooms = createAsyncThunk(
   "rooms/resetRooms",
-  async () => {
-    return await resetRoomsAPI();
+  async (_, { rejectWithValue }) => {
+    try {
+      return await resetRoomsAPI();
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
   }
 );
 
@@ -47,6 +65,7 @@ const roomSlice = createSlice({
       // fetch rooms
       .addCase(fetchRooms.pending, (state) => {
         state.loading = true;
+        state.error = null;
       })
       .addCase(fetchRooms.fulfilled, (state, action) => {
         state.loading = false;
@@ -54,21 +73,35 @@ const roomSlice = createSlice({
       })
       .addCase(fetchRooms.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.error.message;
+        state.error = action.payload;
       })
 
       // book rooms
       .addCase(bookRooms.pending, (state) => {
         state.loading = true;
+        state.error = null;
       })
       .addCase(bookRooms.fulfilled, (state, action) => {
         state.loading = false;
         state.rooms = action.payload;
       })
+      .addCase(bookRooms.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
 
       // reset rooms
+      .addCase(resetRooms.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
       .addCase(resetRooms.fulfilled, (state, action) => {
+        state.loading = false;
         state.rooms = action.payload;
+      })
+      .addCase(resetRooms.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
       });
   },
 });
